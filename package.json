@@ -1,0 +1,43 @@
+{
+  "name": "olive-multimedia-editor",
+  "version": "1.0.0",
+  "description": "Professional Progressive Web App for video editing, photo editing, drawing, and multimedia creation",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx,js,jsx --fix"
+  },
+  "dependencies": {
+    "@types/file-saver": "^2.0.7",
+    "file-saver": "^2.0.5",
+    "idb": "^7.1.1",
+    "workbox-window": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.50.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-pwa": "^0.16.5",
+    "vitest": "^0.34.6",
+    "workbox-cli": "^7.0.0"
+  },
+  "keywords": [
+    "video-editor",
+    "photo-editor",
+    "drawing",
+    "multimedia",
+    "pwa",
+    "webgl",
+    "webassembly"
+  ],
+  "author": "Olive Team",
+  "license": "GPL-3.0"
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Multimedia Editor</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .offline-container {
+      text-align: center;
+      max-width: 600px;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      margin: 0 auto 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+    .retry-button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .retry-button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="logo">O</div>
+    <h1>You're Offline</h1>
+    <p>Olive Multimedia Editor is currently offline. Please check your internet connection and try again.</p>
+    <button class="retry-button" onclick="window.location.reload()">Try Again</button>
+  </div>
+</body>
+</html>
