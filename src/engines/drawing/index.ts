@@ -1,14 +1,24 @@
 import { EventEmitter } from '../../utils/EventEmitter';
+import { CanvasInteractionManager, CanvasInteractionEvent } from '../../core/CanvasInteractionManager';
 
 export class DrawingEngine extends EventEmitter {
   private canvas?: HTMLCanvasElement;
   private ctx?: CanvasRenderingContext2D;
+  private interactionManager: CanvasInteractionManager;
   private isDrawing = false;
   private currentTool = 'brush';
   private brushSize = 10;
   private brushOpacity = 1;
   private currentColor = '#000000';
   private pressure = 1;
+  private layers: ImageData[] = [];
+  private currentLayer = 0;
+
+  constructor() {
+    super();
+    this.interactionManager = new CanvasInteractionManager();
+    this.setupInteractionHandlers();
+  }
 
   async initialize(): Promise<void> {
     try {
@@ -27,6 +37,7 @@ export class DrawingEngine extends EventEmitter {
       }
 
       this.setupDrawingContext();
+      this.interactionManager.initialize(this.canvas);
       console.log('✅ Drawing Engine initialized');
       
     } catch (error) {
@@ -44,6 +55,20 @@ export class DrawingEngine extends EventEmitter {
     this.ctx.imageSmoothingQuality = 'high';
   }
 
+  private setupInteractionHandlers(): void {
+    this.interactionManager.on('stroke-start', (event: CanvasInteractionEvent) => {
+      this.startStroke(event.x, event.y, event.pressure);
+    });
+
+    this.interactionManager.on('stroke-continue', (event: CanvasInteractionEvent) => {
+      this.continueStroke(event.x, event.y, event.pressure);
+    });
+
+    this.interactionManager.on('stroke-end', (_event: CanvasInteractionEvent) => {
+      this.endStroke();
+    });
+  }
+
   getCanvas(): HTMLCanvasElement | undefined {
     return this.canvas;
   }
@@ -54,6 +79,7 @@ export class DrawingEngine extends EventEmitter {
 
   setTool(tool: string): void {
     this.currentTool = tool;
+    this.interactionManager.setTool(tool);
     this.emit('tool-changed', tool);
   }
 
@@ -231,6 +257,61 @@ export class DrawingEngine extends EventEmitter {
   }
 
   async dispose(): Promise<void> {
+    this.interactionManager.dispose();
     // Clean up resources
+  }
+
+  createNewLayer(): number {
+    if (!this.canvas) return -1;
+    
+    const imageData = this.ctx!.createImageData(this.canvas.width, this.canvas.height);
+    this.layers.push(imageData);
+    return this.layers.length - 1;
+  }
+
+  switchToLayer(layerIndex: number): void {
+    if (layerIndex >= 0 && layerIndex < this.layers.length) {
+      this.currentLayer = layerIndex;
+      this.emit('layer-changed', layerIndex);
+    }
+  }
+
+  mergeDown(): void {
+    if (this.currentLayer > 0 && this.layers.length > 1) {
+      const currentLayerData = this.layers[this.currentLayer];
+      const belowLayerData = this.layers[this.currentLayer - 1];
+      
+      // Simple merge by overlaying pixels
+      for (let i = 0; i < currentLayerData.data.length; i += 4) {
+        const alpha = currentLayerData.data[i + 3] / 255;
+        if (alpha > 0) {
+          belowLayerData.data[i] = Math.round(belowLayerData.data[i] * (1 - alpha) + currentLayerData.data[i] * alpha);
+          belowLayerData.data[i + 1] = Math.round(belowLayerData.data[i + 1] * (1 - alpha) + currentLayerData.data[i + 1] * alpha);
+          belowLayerData.data[i + 2] = Math.round(belowLayerData.data[i + 2] * (1 - alpha) + currentLayerData.data[i + 2] * alpha);
+          belowLayerData.data[i + 3] = Math.min(255, belowLayerData.data[i + 3] + currentLayerData.data[i + 3]);
+        }
+      }
+      
+      this.layers.splice(this.currentLayer, 1);
+      this.currentLayer--;
+      this.emit('layer-merged');
+    }
+  }
+
+  exportImage(): string | null {
+    if (!this.canvas) return null;
+    return this.canvas.toDataURL('image/png');
+  }
+
+  importImage(imageData: string): void {
+    if (!this.ctx) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      this.ctx!.clearRect(0, 0, this.canvas!.width, this.canvas!.height);
+      this.ctx!.drawImage(img, 0, 0);
+      this.emit('image-imported');
+    };
+    img.src = imageData;
   }
 }
