@@ -1,7 +1,7 @@
 {
-  "name": "olive-multimedia-editor",
+  "name": "prostudio-multimedia-editor",
   "version": "1.0.0",
-  "description": "Professional Progressive Web App for video editing, photo editing, drawing, and multimedia creation",
+  "description": "ProStudio - Professional Progressive Web App for video editing, photo editing, drawing, and multimedia creation",
   "main": "index.html",
   "type": "module",
   "scripts": {
@@ -38,6 +38,6 @@
     "webgl",
     "webassembly"
   ],
-  "author": "Olive Team",
+  "author": "ProStudio Team",
   "license": "GPL-3.0"
 }

@@ -48,8 +48,8 @@ export class UIManager extends EventEmitter {
         <header class="app-header">
           <div class="header-left">
             <div class="logo">
-              <div class="logo-icon">O</div>
-              <span class="logo-text">Olive</span>
+              <div class="logo-icon">PS</div>
+              <span class="logo-text">ProStudio</span>
             </div>
             <nav class="main-nav">
               <button class="nav-button" data-action="new-project">New</button>
@@ -72,9 +72,14 @@ export class UIManager extends EventEmitter {
             </div>
           </div>
           <div class="header-right">
+            <div class="mode-switch">
+              <button class="mode-button active" data-mode="video">Video</button>
+              <button class="mode-button" data-mode="photo">Photo</button>
+              <button class="mode-button" data-mode="draw">Draw</button>
+            </div>
             <div class="performance-indicator">
               <span class="fps-counter">60 FPS</span>
-              <span class="memory-usage">256 MB</span>
+              <span class="memory-usage">5 MB</span>
             </div>
             <button class="control-button" data-action="settings">⚙️</button>
           </div>
@@ -166,39 +171,22 @@ export class UIManager extends EventEmitter {
             </div>
           </aside>
 
-          <main class="main-area">
-            <div class="viewport-container">
-              <div class="viewport-header">
-                <div class="viewport-controls">
-                  <button class="viewport-button" data-action="fit-to-screen">Fit</button>
-                  <button class="viewport-button" data-action="zoom-in">+</button>
-                  <button class="viewport-button" data-action="zoom-out">-</button>
-                  <span class="zoom-level">100%</span>
-                </div>
-                <div class="mode-switcher">
-                  <button class="mode-button active" data-mode="video">Video</button>
-                  <button class="mode-button" data-mode="photo">Photo</button>
-                  <button class="mode-button" data-mode="drawing">Draw</button>
-                </div>
-              </div>
-              <div class="viewport">
-                <div class="canvas-container">
-                  <!-- Canvas will be inserted here -->
-                </div>
-              </div>
+          <main class="main-content">
+            <div class="canvas-container">
+              <!-- Canvases will be inserted here -->
             </div>
           </main>
         </div>
 
-        <footer class="timeline-container">
+        <footer class="timeline">
           <div class="timeline-header">
             <div class="timeline-controls">
-              <button class="timeline-button" data-action="add-track">+</button>
-              <button class="timeline-button" data-action="zoom-timeline-in">+</button>
-              <button class="timeline-button" data-action="zoom-timeline-out">-</button>
-            </div>
-            <div class="timeline-ruler">
-              <!-- Timeline ruler will be generated -->
+              <button class="zoom-button" data-action="add-track">+</button>
+              <div class="zoom-controls">
+                <button class="zoom-button" data-action="zoom-timeline-out">-</button>
+                <span class="zoom-level">100%</span>
+                <button class="zoom-button" data-action="zoom-timeline-in">+</button>
+              </div>
             </div>
           </div>
           <div class="timeline-tracks">
@@ -222,7 +210,7 @@ export class UIManager extends EventEmitter {
     // Insert video canvas
     const videoCanvas = this.dependencies.videoEngine.getCanvas();
     if (videoCanvas) {
-      videoCanvas.className = 'video-canvas';
+      videoCanvas.className = 'main-canvas video-canvas';
       videoCanvas.style.display = 'block';
       canvasContainer.appendChild(videoCanvas);
     }
@@ -230,7 +218,7 @@ export class UIManager extends EventEmitter {
     // Insert photo canvas
     const photoCanvas = this.dependencies.photoEngine.getCanvas();
     if (photoCanvas) {
-      photoCanvas.className = 'photo-canvas';
+      photoCanvas.className = 'main-canvas photo-canvas';
       photoCanvas.style.display = 'none';
       canvasContainer.appendChild(photoCanvas);
     }
@@ -238,313 +226,18 @@ export class UIManager extends EventEmitter {
     // Insert drawing canvas
     const drawingCanvas = this.dependencies.drawingEngine.getCanvas();
     if (drawingCanvas) {
-      drawingCanvas.className = 'drawing-canvas';
+      drawingCanvas.className = 'main-canvas drawing-canvas';
       drawingCanvas.style.display = 'none';
       canvasContainer.appendChild(drawingCanvas);
     }
   }
 
   private applyStyles(): void {
-    const style = document.createElement('style');
-    style.textContent = `
-      .app-layout {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        background: var(--color-bg-primary);
-        color: var(--color-text-primary);
-      }
-
-      .app-header {
-        height: var(--header-height);
-        background: var(--color-bg-secondary);
-        border-bottom: 1px solid var(--color-border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 var(--spacing-md);
-        flex-shrink: 0;
-      }
-
-      .header-left, .header-center, .header-right {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-md);
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-      }
-
-      .logo-icon {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(45deg, var(--color-accent), #45a049);
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 18px;
-      }
-
-      .logo-text {
-        font-size: var(--font-size-xl);
-        font-weight: 600;
-      }
-
-      .main-nav {
-        display: flex;
-        gap: var(--spacing-sm);
-      }
-
-      .nav-button, .control-button, .tab-button, .tool-button {
-        background: var(--color-bg-tertiary);
-        border: 1px solid var(--color-border);
-        color: var(--color-text-primary);
-        padding: var(--spacing-sm) var(--spacing-md);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: var(--transition-fast);
-      }
-
-      .nav-button:hover, .control-button:hover, .tab-button:hover, .tool-button:hover {
-        background: var(--color-accent);
-        border-color: var(--color-accent);
-      }
-
-      .tab-button.active, .tool-button.active {
-        background: var(--color-accent);
-        border-color: var(--color-accent);
-      }
-
-      .playback-controls {
-        display: flex;
-        gap: var(--spacing-xs);
-      }
-
-      .time-display {
-        font-family: monospace;
-        font-size: var(--font-size-lg);
-      }
-
-      .separator {
-        opacity: 0.5;
-        margin: 0 var(--spacing-xs);
-      }
-
-      .performance-indicator {
-        display: flex;
-        gap: var(--spacing-sm);
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
-      }
-
-      .app-body {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      .sidebar {
-        width: var(--sidebar-width);
-        background: var(--color-bg-secondary);
-        border-right: 1px solid var(--color-border);
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-      }
-
-      .tab-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-
-      .tab-buttons {
-        display: flex;
-        border-bottom: 1px solid var(--color-border);
-      }
-
-      .tab-button {
-        flex: 1;
-        border-radius: 0;
-        border: none;
-        border-bottom: 2px solid transparent;
-      }
-
-      .tab-button.active {
-        border-bottom-color: var(--color-accent);
-        background: var(--color-bg-primary);
-      }
-
-      .tab-content {
-        flex: 1;
-        overflow-y: auto;
-      }
-
-      .tab-panel {
-        display: none;
-        padding: var(--spacing-md);
-      }
-
-      .tab-panel.active {
-        display: block;
-      }
-
-      .tool-section {
-        margin-bottom: var(--spacing-lg);
-      }
-
-      .tool-section h3 {
-        margin-bottom: var(--spacing-sm);
-        font-size: var(--font-size-base);
-        color: var(--color-text-secondary);
-      }
-
-      .tool-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: var(--spacing-xs);
-      }
-
-      .tool-button {
-        aspect-ratio: 1;
-        font-size: 18px;
-        padding: var(--spacing-sm);
-      }
-
-      .tool-properties {
-        margin-top: var(--spacing-lg);
-      }
-
-      .property-group {
-        margin-bottom: var(--spacing-md);
-      }
-
-      .property-group label {
-        display: block;
-        margin-bottom: var(--spacing-xs);
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
-      }
-
-      .property-group input[type="range"] {
-        width: 100%;
-        margin-bottom: var(--spacing-xs);
-      }
-
-      .value-display {
-        font-size: var(--font-size-sm);
-        color: var(--color-text-muted);
-      }
-
-      .main-area {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .viewport-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .viewport-header {
-        background: var(--color-bg-secondary);
-        border-bottom: 1px solid var(--color-border);
-        padding: var(--spacing-sm) var(--spacing-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .viewport-controls, .mode-switcher {
-        display: flex;
-        gap: var(--spacing-sm);
-        align-items: center;
-      }
-
-      .zoom-level {
-        font-size: var(--font-size-sm);
-        color: var(--color-text-secondary);
-        min-width: 40px;
-      }
-
-      .viewport {
-        flex: 1;
-        overflow: auto;
-        background: var(--color-bg-primary);
-        position: relative;
-      }
-
-      .canvas-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-      }
-
-      .canvas-container canvas {
-        max-width: 100%;
-        max-height: 100%;
-        border: 1px solid var(--color-border);
-        box-shadow: var(--shadow-lg);
-      }
-
-      .timeline-container {
-        height: var(--timeline-height);
-        background: var(--color-bg-secondary);
-        border-top: 1px solid var(--color-border);
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-      }
-
-      .timeline-header {
-        background: var(--color-bg-tertiary);
-        border-bottom: 1px solid var(--color-border);
-        padding: var(--spacing-sm) var(--spacing-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 40px;
-      }
-
-      .timeline-controls {
-        display: flex;
-        gap: var(--spacing-sm);
-      }
-
-      .timeline-tracks {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-
-      @media (max-width: 768px) {
-        .sidebar {
-          width: var(--sidebar-width);
-        }
-        
-        .header-center {
-          display: none;
-        }
-        
-        .timeline-container {
-          height: var(--timeline-height);
-        }
-      }
-    `;
-    document.head.appendChild(style);
+    // All styles are now handled by the main CSS file
+    // Remove any existing inline styles
+    const existingStyles = document.querySelectorAll('style[data-ui-manager]');
+    existingStyles.forEach(style => style.remove());
   }
-
   private setupEventListeners(): void {
     if (!this.container) return;
 

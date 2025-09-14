@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/olive-icon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/prostudio-icon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Professional multimedia editing suite for video, photo, and drawing" />
-  <meta name="theme-color" content="#1a1a1a" />
+  <meta name="description" content="ProStudio - Professional multimedia editing suite for video, photo, and drawing" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
-  <title>Olive Multimedia Editor</title>
+  <title>ProStudio - Professional Multimedia Editor</title>
   <style>
     /* Initial loading styles */
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       color: white;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       overflow: hidden;
     }
     
@@ -30,71 +30,96 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       z-index: 9999;
     }
     
     .loading-logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 20px;
-      background: linear-gradient(45deg, #4CAF50, #45a049);
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      font-size: 56px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3), 0 8px 24px rgba(0,0,0,0.6);
       animation: pulse 2s infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .loading-logo::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shine 3s infinite;
     }
     
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
     
+    @keyframes shine {
+      0% { transform: rotate(0deg) translate(-50%, -50%); }
+      100% { transform: rotate(360deg) translate(-50%, -50%); }
+    }
+    
     .loading-text {
-      font-size: 24px;
-      margin-bottom: 10px;
-      font-weight: 600;
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc02);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     
     .loading-subtitle {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-bottom: 30px;
+      font-size: 16px;
+      opacity: 0.7;
+      margin-bottom: 40px;
+      font-weight: 400;
     }
     
     .loading-bar {
-      width: 300px;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
+      width: 360px;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
       overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
     }
     
     .loading-progress {
       height: 100%;
-      background: linear-gradient(90deg, #4CAF50, #45a049);
-      border-radius: 2px;
+      background: linear-gradient(90deg, #ff6b35, #f7931e, #ffcc02);
+      border-radius: 3px;
       width: 0%;
       animation: loading 3s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
     }
     
     @keyframes loading {
       0% { width: 0%; }
-      50% { width: 70%; }
+      50% { width: 75%; }
       100% { width: 100%; }
     }
   </style>
 </head>
 <body>
   <div id="loading-screen">
-    <div class="loading-logo">O</div>
-    <div class="loading-text">Olive Multimedia Editor</div>
-    <div class="loading-subtitle">Loading professional editing suite...</div>
+    <div class="loading-logo">PS</div>
+    <div class="loading-text">ProStudio</div>
+    <div class="loading-subtitle">Professional Multimedia Creation Suite</div>
     <div class="loading-bar">
       <div class="loading-progress"></div>
     </div>
