@@ -122,10 +122,6 @@ export class ColorGradingEngine {
   }
 
   private adjustHue(data: Uint8ClampedArray, hue: number): void {
-    const hueRadians = (hue * 360) * (Math.PI / 180);
-    const cosHue = Math.cos(hueRadians);
-    const sinHue = Math.sin(hueRadians);
-    
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i] / 255;
       const g = data[i + 1] / 255;
