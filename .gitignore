@@ -98,3 +98,32 @@ compile_flags.txt
 *creator.user*
 
 *_qmlcache.qrc
+
+# PWA Build outputs
+dist/
+build/
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.lcov
+
+# Production
+.env.local
+.env.production.local
+.env.development.local
+
+# Cache
+.parcel-cache/
+
+# Temporary
+.tmp/
+tmp/
+
+# Lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml
